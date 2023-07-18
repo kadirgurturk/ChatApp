@@ -9,10 +9,10 @@ import lombok.*;
 @Builder
 public class ChatResponse {
 
-    private String content;
+    private String message;
     private String sender;
     private String receiver;
-    private MessageType type;
+    private MessageType status;
 
 
 }

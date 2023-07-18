@@ -3,7 +3,7 @@ import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 
 var stompClient =null;
-export default function ChatWindow({user, setUser}) {
+  export default function ChatWindow({user, setUser}) {
   const [privateChats, setPrivateChats] = useState(new Map());     
   const [publicChats, setPublicChats] = useState([]); 
   const [tab,setTab] =useState("CHATROOM");
@@ -22,35 +22,36 @@ export default function ChatWindow({user, setUser}) {
     }
 
     const onConnected = () => {
-        setUser({...user,"connected": true});
-        stompClient.subscribe('/chatroom/public', onMessageReceived);
-        stompClient.subscribe('/user/'+user.username+'/private', onPrivateMessage);
-        userJoin();
-    }
-
-    const userJoin=()=>{
-        var chatMessage = {
-          senderName: user.username,
-          status:"JOIN"
-        };
-        stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
-  }
-
-    const onMessageReceived = (payload)=>{
-      var payloadData = JSON.parse(payload.body);
-      switch(payloadData.status){
-          case "JOIN":
-              if(!privateChats.get(payloadData.sender)){
-                  privateChats.set(payloadData.sender,[]);
-                  setPrivateChats(new Map(privateChats));
-              }
-              break;
-          case "MESSAGE":
-              publicChats.push(payloadData);
-              setPublicChats([...publicChats]);
-              break;
+      setUser({ ...user, connected: true });
+      stompClient.subscribe('/chatroom/public', onMessageReceived);
+      stompClient.subscribe('/user/' + user.username + '/private', onPrivateMessage);
+      userJoin(); // Kullanıcının sohbete katılmasını sağlamak için userJoin fonksiyonunu çağırın
+    };
+    
+    const userJoin = () => {
+      var chatMessage = {
+        sender: user.username,
+        status: "JOIN",
+      };
+      stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
+    };
+  console.log(privateChats);
+  const onMessageReceived = (payload) => {
+    var payloadData = JSON.parse(payload.body);
+    console.log(payloadData);
+    switch (payloadData.status) {
+      case "JOIN":
+        if (!privateChats.get(payloadData.sender)) {
+          privateChats.set(payloadData.sender, []);
+          setPrivateChats(new Map(privateChats));
+          console.log("onMessageReceived geldi");
         }
+        break;
+      case "MESSAGE":
+        setPublicChats((prevChats) => [...prevChats, payloadData]);
+        break;
     }
+  };
 
 
       const onPrivateMessage = (payload)=>{
@@ -74,21 +75,22 @@ export default function ChatWindow({user, setUser}) {
     const sendValue=()=>{
       if (stompClient  && stompClient.connected) {
         var chatMessage = {
-          senderName: user.username,
+          sender: user.username,
           message: user.message,
           status:"MESSAGE"
         };
         console.log(chatMessage);
         stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
         setUser({...user,"message": ""});
+        console.log(publicChats);
       }
     }
 
     const sendPrivateValue=()=>{
       if (stompClient  && stompClient.connected) {
         var chatMessage = {
-          senderName: user.username,
-          receiverName:tab,
+          sender: user.username,
+          receiver:tab,
           message: user.message,
           status:"MESSAGE"
         };

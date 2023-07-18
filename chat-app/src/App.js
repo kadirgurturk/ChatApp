@@ -3,10 +3,11 @@ import ChatWindow from "./component/ChatWindow";
 import Login from "./component/Login";
 
 
+
 function App() {
   const [user,setUser] = useState({
     username: '',
-    receivername: '',
+    receiver: '',
     connected: false,
     message: ''
   })
