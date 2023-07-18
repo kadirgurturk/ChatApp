@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect,useState,useRef } from 'react'
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 
@@ -14,6 +14,19 @@ var stompClient =null;
       stompClient.connect({},onConnected, onError);
     },[])
 
+    const chatMessagesRef = useRef(null);
+
+    const handleNewMessage = () => {
+      const chatMessagesElement = chatMessagesRef.current;
+      chatMessagesElement.scrollTop = chatMessagesElement?.scrollHeight - chatMessagesElement?.clientHeight;
+  
+      //------> This method for scrolbar, everytime we add new message then scrolbar down to bottom automaticlay
+    };
+
+    useEffect(() => {
+      handleNewMessage()
+    }, [privateChats,publicChats]);
+  
 
 
     const onError = (err) => {
@@ -44,7 +57,6 @@ var stompClient =null;
         if (!privateChats.get(payloadData.sender)) {
           privateChats.set(payloadData.sender, []);
           setPrivateChats(new Map(privateChats));
-          console.log("onMessageReceived geldi");
         }
         break;
       case "MESSAGE":
@@ -104,6 +116,8 @@ var stompClient =null;
       }
   }
 
+  
+
 
 
   return (
@@ -118,7 +132,7 @@ var stompClient =null;
             </div>
 
         {tab==="CHATROOM" && <div className="chat-content">
-            <ul className="chat-messages">
+            <ul className="chat-messages" ref={chatMessagesRef}>
                 {publicChats.map((chat,index)=>(
                     <li className={`message ${chat.sender === user.username && "self"}`} key={index}>
                         {chat.sender !== user.username && <div className="avatar">{chat.sender}</div>}
@@ -135,7 +149,7 @@ var stompClient =null;
         </div>}
 
         {tab!=="CHATROOM" && <div className="chat-content">
-                <ul className="chat-messages">
+                <ul className="chat-messages" ref={chatMessagesRef}>
                     {[...privateChats.get(tab)].map((chat,index)=>(
                         <li className={`message ${chat.sender === user.username && "self"}`} key={index}>
                             {chat.sender !== user.username && <div className="avatar">{chat.sender}</div>}

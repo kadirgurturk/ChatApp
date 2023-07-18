@@ -30,7 +30,7 @@ body {
     position: relative;
   }
   
-  .register{
+  .login{
     position: fixed;
     padding:30px;
     box-shadow:0 2.8px 2.2px rgba(0, 0, 0, 0.034),0 6.7px 5.3px rgba(0, 0, 0, 0.048),0 12.5px 10px rgba(0, 0, 0, 0.06),0 22.3px 17.9px rgba(0, 0, 0, 0.072),0 41.8px 33.4px rgba(0, 0, 0, 0.086),0 100px 80px rgba(0, 0, 0, 0.12);
@@ -39,7 +39,7 @@ body {
     display: flex;
     flex-direction: row;
   }
-  .chat-box{
+  .chat-window{
     box-shadow:0 2.8px 2.2px rgba(0, 0, 0, 0.034),0 6.7px 5.3px rgba(0, 0, 0, 0.048),0 12.5px 10px rgba(0, 0, 0, 0.06),0 22.3px 17.9px rgba(0, 0, 0, 0.072),0 41.8px 33.4px rgba(0, 0, 0, 0.086),0 100px 80px rgba(0, 0, 0, 0.12);
     margin:40px 50px;
     height: 600px;
@@ -57,10 +57,30 @@ body {
     margin-left: 10px;
   }
   
-  .chat-messages{
+  .chat-messages {
     height: 80%;
     border: 1px solid #000;
+    overflow-y: auto; /* Yükseklik aşıldığında kaydırma çubuğunu göster */
   }
+  
+  /* Kaydırma çubuğunu stilize etmek için */
+  .chat-messages::-webkit-scrollbar {
+    width: 8px; /* Kaydırma çubuğunun genişliği */
+  }
+  
+  .chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Kaydırma çubuğu arka plan rengi */
+  }
+  
+  .chat-messages::-webkit-scrollbar-thumb {
+    background: #888; /* Kaydırma çubuğu dolgu rengi */
+    border-radius: 4px; /* Kaydırma çubuğu köşe yuvarlatma */
+  }
+  
+  .chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Kaydırma çubuğu dolgu rengi (üzerine gelindiğinde) */
+  }
+  
   
   .send-message{
     width: 100%;
