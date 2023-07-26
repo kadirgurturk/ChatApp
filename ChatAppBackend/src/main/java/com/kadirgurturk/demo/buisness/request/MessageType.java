@@ -1,4 +1,4 @@
-package com.kadirgurturk.demo.request;
+package com.kadirgurturk.demo.buisness.request;
 
 public enum MessageType {
 
