@@ -23,7 +23,7 @@ public class ChatController {
     @MessageMapping("/private-message")
     public ChatResponse recMessage(@Payload ChatResponse response){
         simpMessagingTemplate.convertAndSendToUser(response.getReceiver(),"/private",response);
-        System.out.println(response.toString());
+
         return response;
     }
 

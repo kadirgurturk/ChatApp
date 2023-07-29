@@ -5,24 +5,27 @@ import lombok.Data;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
+@Table(name = "users")
 public class User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        private String email;
+        @Column(name = "name")
+        private String name;
 
-        private String username;
+        @Column(name = "phoneNumber")
+        private String phoneNumber;
 
-        // Diğer kullanıcı bilgileri ve diğer ilişkiler buraya eklenir.
+        // Kullanıcının sahip olduğu chatler ile ilişki tanımı (birçoktan çoka)
+        @ManyToMany(mappedBy = "users")
+        private Set<Chat> chats;
 
-        @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-        private List<PrivateMessage> sentPrivateMessages;
+        // Diğer kullanıcı detayları ve özellikleri
 
-        // Getter, setter ve diğer metotlar buraya eklenir.
-    }
-
+        // Kurucu metodlar, getter ve setter metodları
+}
