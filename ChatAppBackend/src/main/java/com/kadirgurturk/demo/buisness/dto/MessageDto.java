@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @Data
 public class MessageDto {
 
-
     private MessageStatus status;
     public String content;
     private MessageType type;
@@ -21,7 +20,9 @@ public class MessageDto {
     public Long receiverId;
 
 
-    public MessageDto(Message entity){
+    public MessageDto(Message entity)
+    {
+
         status = entity.getStatus();
         content = entity.getContent();
         type = entity.getType();

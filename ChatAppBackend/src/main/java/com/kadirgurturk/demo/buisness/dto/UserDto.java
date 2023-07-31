@@ -12,6 +12,7 @@ public class UserDto {
 
     public UserDto(User entity)
     {
+
         name = entity.getName();
         userId = entity.getId();
         active = entity.isActive();

@@ -16,7 +16,9 @@ public class ChatDto {
     private ChatType type;
     private List<MessageDto> messageDtos;
 
-    public ChatDto(Chat entity) {
+    public ChatDto(Chat entity)
+    {
+
         id = entity.getId();
         type = entity.getType();
         messageDtos = StreamSupport.stream(entity.getMessages().spliterator(),false)
