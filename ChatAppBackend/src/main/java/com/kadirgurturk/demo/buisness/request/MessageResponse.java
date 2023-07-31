@@ -15,7 +15,10 @@ public class MessageResponse {
     private String content;
     private MessageStatus status;
     private MessageType type;
+    private Long senderId;
+    private Long recieverId;
     private Long chatId;
+
 
 
 }

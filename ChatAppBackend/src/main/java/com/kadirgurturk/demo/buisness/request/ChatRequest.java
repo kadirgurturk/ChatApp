@@ -10,6 +10,6 @@ public class ChatRequest {
     private ChatType type;
     public Long senderId;
     public Long receiverId;
-    public ChatType chatType;
+    public String chatType;
 
 }

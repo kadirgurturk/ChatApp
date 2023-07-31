@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -30,7 +32,7 @@ public class ChatService {
 
             var chat = new Chat();
 
-            chat.setType(chatRequest.chatType);
+            chat.setType(ChatType.valueOf(chatRequest.getChatType()));
             var array = new ArrayList<User>();
 
             array.add(userRepository.findById(chatRequest.senderId).get());
@@ -42,7 +44,7 @@ public class ChatService {
 
             var chat = new Chat();
 
-            chat.setType(chatRequest.chatType);
+            chat.setType(ChatType.valueOf(chatRequest.getChatType()));
             var array = new ArrayList<User>();
 
             array.add(userRepository.findById(chatRequest.senderId).get());
@@ -74,4 +76,11 @@ public class ChatService {
         return new ChatDto(chat.get());
 
     }
+
+    public boolean existsPrivateChatWithUsers(Long senderId, Long receiverId) {
+        List<Long> userIds = Arrays.asList(senderId, receiverId);
+        return chatRepository.existsByTypeAndUsers_IdIn(ChatType.PRIVATE, userIds);
+    }
+
+
 }
