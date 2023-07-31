@@ -17,7 +17,7 @@ public class Chat {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private ChatType Type;
+    private ChatType type;
 
     // Chat'in sahip olduğu kullanıcılar ile ilişki tanımı (çoktan çoka)
     @ManyToMany

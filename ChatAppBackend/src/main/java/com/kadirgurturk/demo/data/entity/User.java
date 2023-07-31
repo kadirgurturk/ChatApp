@@ -22,7 +22,7 @@ public class User {
 
 
         @Column(name = "active")
-        private boolean Active;
+        private boolean active;
 
         // Kullanıcının sahip olduğu chatler ile ilişki tanımı (birçoktan çoka)
         @ManyToMany(mappedBy = "users")
