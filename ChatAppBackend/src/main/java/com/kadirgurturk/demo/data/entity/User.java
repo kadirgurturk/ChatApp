@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User {
 
         @Id
@@ -18,12 +19,14 @@ public class User {
         @Column(name = "name")
         private String name;
 
-        @Column(name = "phoneNumber")
-        private String phoneNumber;
+
+
+        @Column(name = "active")
+        private boolean Active;
 
         // Kullanıcının sahip olduğu chatler ile ilişki tanımı (birçoktan çoka)
         @ManyToMany(mappedBy = "users")
-        private Set<Chat> chats;
+        private List<Chat> chats;
 
         // Diğer kullanıcı detayları ve özellikleri
 

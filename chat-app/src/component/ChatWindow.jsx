@@ -44,7 +44,7 @@ var stompClient =null;
     const userJoin = () => {
       var chatMessage = {
         sender: user.username,
-        status: "JOIN",
+        type: "JOIN",
       };
       stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
     };
@@ -53,7 +53,7 @@ var stompClient =null;
   const onMessageReceived = (payload) => {
     var payloadData = JSON.parse(payload.body);
     
-    switch (payloadData.status) {
+    switch (payloadData.type) {
       case "JOIN":
         if (!privateChats.get(payloadData.sender)) {
           privateChats.set(payloadData.sender, []);
@@ -90,7 +90,7 @@ var stompClient =null;
         var chatMessage = {
           sender: user.username,
           message: user.message,
-          status:"MESSAGE"
+          type:"MESSAGE"
         };
         console.log(chatMessage);
         stompClient.send("/app/message", {}, JSON.stringify(chatMessage));
@@ -105,7 +105,7 @@ var stompClient =null;
           sender: user.username,
           receiver:tab,
           message: user.message,
-          status:"MESSAGE"
+          type:"MESSAGE"
         };
         
         if(user.username !== tab){

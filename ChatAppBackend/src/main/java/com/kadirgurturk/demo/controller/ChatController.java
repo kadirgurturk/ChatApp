@@ -1,6 +1,7 @@
 package com.kadirgurturk.demo.controller;
 
-import com.kadirgurturk.demo.buisness.request.ChatResponse;
+import com.kadirgurturk.demo.buisness.request.MessageResponse;
+import com.kadirgurturk.demo.buisness.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,17 +15,19 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    private MessageService messageService;
+
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
-    public ChatResponse receiveMessage(@Payload ChatResponse response){
-        return response;
+    public MessageResponse receiveMessage(@Payload MessageResponse response){
+        return messageService.saveMessage(response);
     }
 
     @MessageMapping("/private-message")
-    public ChatResponse recMessage(@Payload ChatResponse response){
-        simpMessagingTemplate.convertAndSendToUser(response.getReceiver(),"/private",response);
+    public MessageResponse recMessage(@Payload MessageResponse response){
+        //simpMessagingTemplate.convertAndSendToUser(response.getReceiver(),"/private",response);
 
-        return response;
+        return messageService.saveMessage(response);
     }
 
 }
