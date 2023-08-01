@@ -37,12 +37,12 @@ public class ChatController {
     @MessageMapping("/getchat")
     @SendTo("/chatroom/chat")
     public ResponseEntity<?> getChatByIdAndType(@Payload ChatRequest request) {
-        Long senderId = request.getSenderId();
-        Long receiverId = request.getReceiverId();
+
+
         ChatDto chatDto;
 
         // İlgili kullanıcılar arasında private chat var mı kontrol ediyoruz
-        if (chatService.existsPrivateChatWithUsers(senderId, receiverId)) {
+        if (chatService.existsPrivateChatWithUsers(request)) {
             // Var olan chati bulup döndürüyoruz
             chatDto = chatService.;
         } else {

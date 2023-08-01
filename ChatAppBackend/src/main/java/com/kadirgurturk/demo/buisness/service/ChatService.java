@@ -26,11 +26,14 @@ public class ChatService {
 
     private UserDto userDto;
 
-    public ChatRequest saveChat(ChatRequest chatRequest)
+    public ChatDto saveChat(ChatRequest chatRequest)
     {
+
+
+        var chat = new Chat();
+
         if(chatRequest.chatType.equals(ChatType.PRIVATE)){
 
-            var chat = new Chat();
 
             chat.setType(ChatType.valueOf(chatRequest.getChatType()));
             var array = new ArrayList<User>();
@@ -42,7 +45,6 @@ public class ChatService {
 
         }else{
 
-            var chat = new Chat();
 
             chat.setType(ChatType.valueOf(chatRequest.getChatType()));
             var array = new ArrayList<User>();
@@ -53,7 +55,7 @@ public class ChatService {
 
         }
 
-        return chatRequest;
+        return new ChatDto(chat);
     }
 
     public void addUserToChatroom(UserDto userDto)
@@ -77,9 +79,14 @@ public class ChatService {
 
     }
 
-    public boolean existsPrivateChatWithUsers(Long senderId, Long receiverId) {
-        List<Long> userIds = Arrays.asList(senderId, receiverId);
+    public boolean existsPrivateChatWithUsers(ChatRequest request) {
+        List<Long> userIds = Arrays.asList(request.senderId, request.receiverId);
         return chatRepository.existsByTypeAndUsers_IdIn(ChatType.PRIVATE, userIds);
+    }
+
+    public ChatDto findByTypeAndUsersIn(ChatRequest request)
+    {
+
     }
 
 
