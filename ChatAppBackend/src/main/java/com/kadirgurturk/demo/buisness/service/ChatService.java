@@ -1,6 +1,7 @@
 package com.kadirgurturk.demo.buisness.service;
 
 import com.kadirgurturk.demo.buisness.dto.ChatDto;
+import com.kadirgurturk.demo.buisness.dto.MessageDto;
 import com.kadirgurturk.demo.buisness.dto.UserDto;
 import com.kadirgurturk.demo.buisness.request.ChatRequest;
 import com.kadirgurturk.demo.buisness.request.MessageResponse;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -28,8 +31,6 @@ public class ChatService {
 
     public ChatDto saveChat(ChatRequest chatRequest)
     {
-
-
         var chat = new Chat();
 
         if(chatRequest.chatType.equals(ChatType.PRIVATE)){
@@ -56,6 +57,11 @@ public class ChatService {
         }
 
         return new ChatDto(chat);
+    }
+
+    public ChatDto findChatroom()
+    {
+        return new ChatDto(chatRepository.findByType(ChatType.CHATROOM).get(0));
     }
 
     public void addUserToChatroom(UserDto userDto)
@@ -86,7 +92,11 @@ public class ChatService {
 
     public ChatDto findByTypeAndUsersIn(ChatRequest request)
     {
+        var arr = new ArrayList<User>();
+        arr.add(userRepository.findById(request.senderId).get());
+        arr.add(userRepository.findById(request.receiverId).get());
 
+        return new ChatDto(chatRepository.findByTypeAndUsersIn(ChatType.valueOf(request.getChatType()),arr).get(0));
     }
 
 

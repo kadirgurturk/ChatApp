@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 
 @Entity
@@ -23,19 +24,17 @@ public class Message {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "timestamp")
-    private Timestamp timestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private MessageType type;
 
-    // Mesajın ait olduğu chat ile ilişki tanımı
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    private User sender;
+
+    @ManyToOne
     private Chat chat;
-
-    // Diğer mesaj detayları ve özellikleri
-
-    // Kurucu metodlar, getter ve setter metodları
 }

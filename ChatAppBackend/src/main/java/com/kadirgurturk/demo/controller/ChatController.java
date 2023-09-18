@@ -27,30 +27,29 @@ public class ChatController {
 
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
-    public MessageResponse receiveMessage(@Payload MessageResponse response){
+    public ResponseEntity<?> receiveMessage(@Payload MessageResponse response){
 
+        messageService.saveMessage(response);
 
-
-        return messageService.saveMessage(response);
+        return ResponseEntity.ok(chatService.findChatroom());
     }
 
     @MessageMapping("/getchat")
     @SendTo("/chatroom/chat")
     public ResponseEntity<?> getChatByIdAndType(@Payload ChatRequest request) {
 
-
         ChatDto chatDto;
 
-        // İlgili kullanıcılar arasında private chat var mı kontrol ediyoruz
+
         if (chatService.existsPrivateChatWithUsers(request)) {
-            // Var olan chati bulup döndürüyoruz
-            chatDto = chatService.;
+
+            chatDto = chatService.findByTypeAndUsersIn(request);
         } else {
-            // Yeni bir private chat oluşturup döndürüyoruz
+
             chatDto = chatService.saveChat(request);
         }
 
-        // Chat nesnesini WebSocket üzerinden döndürüyoruz
+
         return ResponseEntity.ok(chatDto);
     }
 

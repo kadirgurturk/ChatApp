@@ -1,32 +1,46 @@
 package com.kadirgurturk.demo.data.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
+@Builder
 public class User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name = "name")
-        private String name;
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "password")
+        private String password;
+
+        @Column(name = "email")
+        private String email;
 
         @Column(name = "active")
         private boolean active;
 
-        // Kullanıcının sahip olduğu chatler ile ilişki tanımı (birçoktan çoka)
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "created_date")
+        private LocalDate createdDate;
+
         @ManyToMany(mappedBy = "users")
         private List<Chat> chats;
 
-        // Diğer kullanıcı detayları ve özellikleri
-
-        // Kurucu metodlar, getter ve setter metodları
 }

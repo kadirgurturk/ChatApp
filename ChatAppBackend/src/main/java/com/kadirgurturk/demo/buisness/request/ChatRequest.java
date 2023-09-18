@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class ChatRequest {
 
-
     public Long senderId;
     public Long receiverId;
     public String chatType;

@@ -4,6 +4,8 @@ import com.kadirgurturk.demo.data.enums.ChatType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,20 +21,15 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private ChatType type;
 
-    // Chat'in sahip olduğu kullanıcılar ile ilişki tanımı (çoktan çoka)
-    @ManyToMany
-    @JoinTable(
-            name = "users_chats",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
+    @JoinColumn(name = "created_user")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private User createdUser;
 
-    // Chat'in içerdiği mesajlar ile ilişki tanımı (birçoktan bire)
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
-    private List<Message> messages;
 
-    // Diğer chat detayları ve özellikleri
+    private Set<User> users = new HashSet<>();
 
-    // Kurucu metodlar, getter ve setter metodları
+    @OneToMany
+    private List<Message> messages = new ArrayList<>();
+
+
 }
