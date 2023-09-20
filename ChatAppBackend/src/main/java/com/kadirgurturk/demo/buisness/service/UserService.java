@@ -19,6 +19,11 @@ public class UserService {
     private UserRepository userRepository;
 
 
+    public void saveUser(User user){
+         userRepository.save(user);
+    }
+
+
     public List<UserDto> getAllUser()
     {
         return StreamSupport.stream(userRepository.findAll().spliterator(),false)
@@ -47,8 +52,15 @@ public class UserService {
 
     }
 
-    public User findByEmail(String jwt){
+    public User findByEmail(String email){
 
+        var user = userRepository.findByEmail(email);
+
+        if(user.isPresent()){
+            return user.get();
+        }else{
+            throw new UserExcepiton("this email is not valid");
+        }
     }
 
     public UserDto updateUser(Long id, UpdateUserRequest updateUserRequest){

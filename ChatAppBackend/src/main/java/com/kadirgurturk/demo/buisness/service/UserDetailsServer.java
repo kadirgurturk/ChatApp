@@ -7,11 +7,13 @@ import com.kadirgurturk.demo.security.JwtUserDetails;
 import jdk.jshell.spi.ExecutionControl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServer {
+public class UserDetailsServer extends UserDetailsService {
 
     private UserRepository userRepository;
 
@@ -31,5 +33,10 @@ public class UserDetailsServer {
 
 
         return JwtUserDetails.create(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
     }
 }
