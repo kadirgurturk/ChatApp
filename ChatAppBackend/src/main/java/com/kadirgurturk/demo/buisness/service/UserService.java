@@ -55,5 +55,10 @@ public class UserService {
 
     }
 
+    public List<User> searchUser(String query){
+
+        return userRepository.searchUser(query);
+    }
+
 
 }
