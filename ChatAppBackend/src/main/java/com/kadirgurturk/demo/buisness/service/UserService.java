@@ -32,7 +32,7 @@ public class UserService {
 
     }
 
-    private User findUserById(Long id){
+    public User findUserById(Long id){
 
         var user = userRepository.findById(id);
 
@@ -45,10 +45,13 @@ public class UserService {
 
     public UserDto findUserDtoById(Long id){
 
+        return null;
 
     }
 
     public UserDto findUserWithToken(String jwt){
+
+        return null;
 
     }
 
@@ -64,6 +67,9 @@ public class UserService {
     }
 
     public UserDto updateUser(Long id, UpdateUserRequest updateUserRequest){
+
+
+        return null;
 
     }
 

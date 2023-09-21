@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -24,79 +25,65 @@ import java.util.stream.StreamSupport;
 public class ChatService {
 
     private ChatRepository chatRepository;
+    private UserService userService;
 
-    private UserRepository userRepository;
+    public Chat createChat(Long senderId, Long receiverId ){
+        User sender = userService.findUserById(senderId);
+        User reciever = userService.findUserById(receiverId);
 
-    private UserDto userDto;
+        Chat isChatExist = chatRepository.findPrivateChatsByUsers(sender,reciever);
 
-    public ChatDto saveChat(ChatRequest chatRequest)
-    {
-        var chat = new Chat();
+        if(isChatExist!=null){
 
-        if(chatRequest.chatType.equals(ChatType.PRIVATE)){
+            return isChatExist;
+        }else {
+            Chat chat = new Chat();
+            chat.getUsers().add(sender);
+            chat.getUsers().add(reciever);
+            chat.setCreatedUser(sender);
+            chat.setType(ChatType.PRIVATE);
+
+            return chat;
+        }
+
+    }
+
+    public Chat addUserChatRoom(Long userId){
+
+        Chat chatRoom = chatRepository.findByType(ChatType.CHATROOM).get(0);
+
+        User user = userService.findUserById(userId);
+
+        chatRoom.getUsers().add(user);
+
+        return chatRoom;
+    }
+
+    public Chat createRoom(Long senderId, Long receiverId ){
+
+        Chat chatRoom = new Chat();
+
+        chatRoom.setType(ChatType.PRIVATE);
+
+        return chatRoom;
 
 
-            chat.setType(ChatType.valueOf(chatRequest.getChatType()));
-            var array = new ArrayList<User>();
+    }
 
-            array.add(userRepository.findById(chatRequest.senderId).get());
-            array.add(userRepository.findById(chatRequest.receiverId).get());
+    public Chat findChatById(Long id){
+        Optional<Chat> chat = chatRepository.findById(id);
 
-            chatRepository.save(chat);
-
+        if(chat.isPresent()){
+            return chat.get();
         }else{
-
-
-            chat.setType(ChatType.valueOf(chatRequest.getChatType()));
-            var array = new ArrayList<User>();
-
-            array.add(userRepository.findById(chatRequest.senderId).get());
-
-            chatRepository.save(chat);
-
+            // TODO added excepiton
         }
 
-        return new ChatDto(chat);
     }
 
-    public ChatDto findChatroom()
-    {
-        return new ChatDto(chatRepository.findByType(ChatType.CHATROOM).get(0));
-    }
+    public List<Chat> findAllChatByUserId(Long id){
 
-    public void addUserToChatroom(UserDto userDto)
-    {
-        var chatroom = chatRepository.findByType(ChatType.CHATROOM);
-        var user = userRepository.findById(userDto.userId);
-        if(user.isPresent()){
-
-        }
-    }
-
-    public ChatDto findChatById(Long chatId)
-    {
-        var chat = chatRepository.findById(chatId);
-
-        if(chat.isEmpty()){
-
-        }
-
-        return new ChatDto(chat.get());
-
-    }
-
-    public boolean existsPrivateChatWithUsers(ChatRequest request) {
-        List<Long> userIds = Arrays.asList(request.senderId, request.receiverId);
-        return chatRepository.existsByTypeAndUsers_IdIn(ChatType.PRIVATE, userIds);
-    }
-
-    public ChatDto findByTypeAndUsersIn(ChatRequest request)
-    {
-        var arr = new ArrayList<User>();
-        arr.add(userRepository.findById(request.senderId).get());
-        arr.add(userRepository.findById(request.receiverId).get());
-
-        return new ChatDto(chatRepository.findByTypeAndUsersIn(ChatType.valueOf(request.getChatType()),arr).get(0));
+        return chatRepository.findByUsersId(id);
     }
 
 

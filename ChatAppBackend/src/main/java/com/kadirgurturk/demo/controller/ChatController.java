@@ -1,12 +1,15 @@
 package com.kadirgurturk.demo.controller;
 
+import com.kadirgurturk.demo.buisness.dto.ApıResponse;
 import com.kadirgurturk.demo.buisness.dto.ChatDto;
 import com.kadirgurturk.demo.buisness.request.ChatRequest;
 import com.kadirgurturk.demo.buisness.request.MessageResponse;
 import com.kadirgurturk.demo.buisness.service.ChatService;
 import com.kadirgurturk.demo.buisness.service.MessageService;
+import com.kadirgurturk.demo.buisness.service.UserService;
 import com.kadirgurturk.demo.data.entity.Chat;
 import com.kadirgurturk.demo.data.enums.ChatType;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,50 +17,32 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@AllArgsConstructor
+@RequestMapping("/api/chat/")
 public class ChatController {
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    private MessageService messageService;
+    private UserService userService;
 
     private ChatService chatService;
 
-    @MessageMapping("/message")
-    @SendTo("/chatroom/public")
-    public ResponseEntity<?> receiveMessage(@Payload MessageResponse response){
+    @PostMapping("/single")
+    public ApıResponse<?> createChat(@RequestBody ChatRequest chatRequest)
+    {
 
-        messageService.saveMessage(response);
+        ApıResponse<Chat> apıResponse = new ApıResponse<>();
 
-        return ResponseEntity.ok(chatService.findChatroom());
-    }
+        Chat chat = chatService.createChat(chatRequest.senderId,chatRequest.receiverId);
 
-    @MessageMapping("/getchat")
-    @SendTo("/chatroom/chat")
-    public ResponseEntity<?> getChatByIdAndType(@Payload ChatRequest request) {
+        apıResponse.setResults(chat);
+        apıResponse.setStatus("Success");
 
-        ChatDto chatDto;
-
-
-        if (chatService.existsPrivateChatWithUsers(request)) {
-
-            chatDto = chatService.findByTypeAndUsersIn(request);
-        } else {
-
-            chatDto = chatService.saveChat(request);
-        }
-
-
-        return ResponseEntity.ok(chatDto);
-    }
-
-    @MessageMapping("/private-message")
-    public MessageResponse recMessage(@Payload MessageResponse response){
-        simpMessagingTemplate.convertAndSendToUser(response.getRecieverId().toString(),"/private",response);
-
-        return messageService.saveMessage(response);
+        return  apıResponse;
     }
 
 

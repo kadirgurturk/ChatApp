@@ -75,7 +75,12 @@ public class JwtTokenProvider {
 
         return false;
 
+    }
 
+    private boolean isTokenExpired(String token) {
+        //We checked here whether it has expired or not.
+        Date expiration =  Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody().getExpiration();
+        return expiration.before(new Date());
     }
 
 }

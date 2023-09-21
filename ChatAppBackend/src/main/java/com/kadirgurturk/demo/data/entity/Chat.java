@@ -25,7 +25,7 @@ public class Chat {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private User createdUser;
 
-
+    @ManyToMany
     private Set<User> users = new HashSet<>();
 
     @OneToMany

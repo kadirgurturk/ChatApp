@@ -7,15 +7,19 @@ import com.kadirgurturk.demo.buisness.request.UserRequest;
 import com.kadirgurturk.demo.buisness.service.UserService;
 import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.exception.UserExcepiton;
+import com.kadirgurturk.demo.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -24,10 +28,36 @@ public class AuthController {
 
     private AuthenticationManager authenticationManager;
 
-    UserService userService;
+    private JwtTokenProvider jwtTokenProvider;
+
+    private UserService userService;
+
+    private PasswordEncoder passwordEncoder;
+
 
     @PostMapping("/login")
     public ApıResponse<?> login(@RequestBody UserRequest loginRequest){
+        AuthResponse authResponse = new AuthResponse();
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
+        Authentication auth = authenticationManager.authenticate(authToken);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        String jwtToken = jwtTokenProvider.generateToken(auth);
+
+        User user = userService.findByEmail(loginRequest.getEmail());
+
+        authResponse.setMessege("User successfully registered.");
+        authResponse.setAccessToken("Bearer " + jwtToken);
+        authResponse.setUserId(user.getId());
+
+        var apıResponse = new ApıResponse<AuthResponse>();
+
+        apıResponse.setStatus("Succes");
+        apıResponse.setResults(authResponse);
+
+        return apıResponse;
 
     }
 
@@ -43,8 +73,9 @@ public class AuthController {
         User userNew = User.builder()
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .password(registerRequest.getPassword())
                 .email(registerRequest.getEmail()).build();
+
+        userNew.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         userService.saveUser(userNew);
 
@@ -53,7 +84,18 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
+        String jwtToken = jwtTokenProvider.generateToken(auth);
 
+        authResponse.setMessege("User successfully registered.");
+        authResponse.setAccessToken("Bearer " + jwtToken);
+        authResponse.setUserId(userNew.getId());
+
+        var apıResponse = new ApıResponse<AuthResponse>();
+
+        apıResponse.setStatus("Succes");
+        apıResponse.setResults(authResponse);
+
+        return apıResponse;
 
     }
 
