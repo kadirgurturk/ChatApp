@@ -17,9 +17,10 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${quest.app.key}")
+    @Value("${chatapp.app.key}")
     private String APP_KEY;        //-----> This is a special key for our project
-    @Value("${quest.ex}")
+
+    @Value("${chatapp.ex}")
     private long EXPIRES_TIME;
 
     public String generateToken(Authentication auth)

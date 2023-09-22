@@ -48,24 +48,20 @@ public class ChatService {
 
     }
 
-    public Chat addUserChatRoom(Long userId){
+    public void addUserChatRoom(String email){
 
         Chat chatRoom = chatRepository.findByType(ChatType.CHATROOM).get(0);
 
-        User user = userService.findUserById(userId);
+        User user = userService.findByEmail(email);
 
         chatRoom.getUsers().add(user);
-
-        return chatRoom;
     }
 
-    public Chat createRoom(Long senderId, Long receiverId ){
+    public void createChatRoom(Long senderId, Long receiverId ){
 
         Chat chatRoom = new Chat();
 
         chatRoom.setType(ChatType.PRIVATE);
-
-        return chatRoom;
 
 
     }
@@ -77,7 +73,11 @@ public class ChatService {
             return chat.get();
         }else{
             // TODO added excepiton
+
+            return null;
         }
+
+
 
     }
 

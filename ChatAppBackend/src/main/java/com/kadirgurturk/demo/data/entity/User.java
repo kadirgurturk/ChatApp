@@ -1,12 +1,14 @@
 package com.kadirgurturk.demo.data.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +17,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class User {
 
         @Id
@@ -38,7 +41,7 @@ public class User {
 
         @Temporal(TemporalType.TIMESTAMP)
         @Column(name = "created_date")
-        private LocalDate createdDate;
+        private LocalDateTime createdDate;
 
         @ManyToMany(mappedBy = "users")
         private List<Chat> chats;

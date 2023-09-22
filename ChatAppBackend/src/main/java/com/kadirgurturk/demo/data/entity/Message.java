@@ -1,12 +1,11 @@
 package com.kadirgurturk.demo.data.entity;
 
 import com.kadirgurturk.demo.data.enums.MessageStatus;
-import com.kadirgurturk.demo.data.enums.MessageType;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -26,11 +25,7 @@ public class Message {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
-    private LocalDate createdDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private MessageType type;
+    private LocalDateTime createdDate;
 
     @ManyToOne
     private User sender;

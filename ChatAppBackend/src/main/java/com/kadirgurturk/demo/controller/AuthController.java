@@ -4,6 +4,7 @@ import com.kadirgurturk.demo.buisness.dto.ApıResponse;
 import com.kadirgurturk.demo.buisness.dto.AuthResponse;
 import com.kadirgurturk.demo.buisness.request.RegisterRequest;
 import com.kadirgurturk.demo.buisness.request.UserRequest;
+import com.kadirgurturk.demo.buisness.service.ChatService;
 import com.kadirgurturk.demo.buisness.service.UserService;
 import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.exception.UserExcepiton;
@@ -33,6 +34,8 @@ public class AuthController {
     private UserService userService;
 
     private PasswordEncoder passwordEncoder;
+
+    private ChatService chatService;
 
 
     @PostMapping("/login")
@@ -78,6 +81,8 @@ public class AuthController {
         userNew.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         userService.saveUser(userNew);
+
+        chatService.addUserChatRoom(userNew.getEmail()); // We added new User to chatroom
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userNew.getEmail(),userNew.getPassword());
         Authentication auth = authenticationManager.authenticate(authToken);

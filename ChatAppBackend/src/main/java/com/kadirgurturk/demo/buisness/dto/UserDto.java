@@ -6,14 +6,14 @@ import lombok.Data;
 @Data
 public class UserDto {
 
-    public String name;
+    public String first_name;
     public Long userId;
     public boolean active;
 
     public UserDto(User entity)
     {
 
-        name = entity.getName();
+        first_name = entity.getFirstName();
         userId = entity.getId();
         active = entity.isActive();
 

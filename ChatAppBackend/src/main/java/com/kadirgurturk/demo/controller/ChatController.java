@@ -17,10 +17,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -45,8 +44,33 @@ public class ChatController {
         return  apıResponse;
     }
 
+    @GetMapping("/single/user/")
+    public ApıResponse<?> getAllChatList(@RequestParam("userid") Long userId)
+    {
 
+        ApıResponse<List<Chat>> apıResponse = new ApıResponse<>();
 
+        List<Chat> chats = chatService.findAllChatByUserId(userId);
+
+        apıResponse.setResults(chats);
+        apıResponse.setStatus("Success");
+
+        return  apıResponse;
+    }
+
+    @GetMapping("/single")
+    public ApıResponse<?> getChatById(@RequestParam("chatid") Long chatId)
+    {
+
+        ApıResponse<Chat> apıResponse = new ApıResponse<>();
+
+        Chat chat = chatService.findChatById(chatId);
+
+        apıResponse.setResults(chat);
+        apıResponse.setStatus("Success");
+
+        return  apıResponse;
+    }
 
 
 }
