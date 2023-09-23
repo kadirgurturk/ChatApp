@@ -12,20 +12,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class UserDetailsServer implements UserDetailsService {
 
     private UserRepository userRepository;
 
 
-    public UserDetails loadUserByEmail(String email){
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserExcepiton("User Not Found with this email: "));
-
-        return JwtUserDetails.create(user);
+    public UserDetailsServer(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-
 
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id)
@@ -36,7 +30,13 @@ public class UserDetailsServer implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        // We are using email instead userName,so we return email
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserExcepiton("User Not Found with user: "));
+
+        return JwtUserDetails.create(user);
     }
 }

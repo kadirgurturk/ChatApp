@@ -5,7 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +18,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    UserDetailsServer userDetailsService;
+    UserDetailsServer userDetailsServer;
 
 
     @Override
@@ -35,7 +38,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
             if(StringUtils.hasText(jwtToken) && jwtTokenProvider.ControlToken(jwtToken)) {
                 String email = jwtTokenProvider.getEmailFromToken(jwtToken);
-                UserDetails user = userDetailsService.loadUserByEmail(email);
+                UserDetails user = userDetailsServer.loadUserByUsername(email);
                 if(user != null) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -50,6 +53,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
 
     private String requestToJwt(HttpServletRequest request) {
+
 
         String bearer = request.getHeader("Authorization");
         if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {

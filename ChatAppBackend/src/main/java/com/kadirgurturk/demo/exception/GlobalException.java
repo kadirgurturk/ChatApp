@@ -5,6 +5,7 @@ import com.kadirgurturk.demo.buisness.dto.ApıResponse;
 import com.kadirgurturk.demo.buisness.dto.ErrorResponse;
 import com.kadirgurturk.demo.data.entity.User;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,6 +50,20 @@ public class GlobalException {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApıResponse<?> illeagalArgumentException(IllegalArgumentException exception) {
+        ApıResponse<?> serviceResponse = new ApıResponse<>();
+        List<ErrorResponse> errors = new ArrayList<>();
+
+        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), exception.getMessage());
+        errors.add(errorResponse);
+
+        serviceResponse.setStatus("FAILED");
+        serviceResponse.setErrors(errors);
+        return serviceResponse;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApıResponse<?> badCredentialsException(BadCredentialsException exception) {
         ApıResponse<?> serviceResponse = new ApıResponse<>();
         List<ErrorResponse> errors = new ArrayList<>();
 

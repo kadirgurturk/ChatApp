@@ -55,6 +55,10 @@ public class UserService {
 
     }
 
+    public boolean isEmailValid(String email){
+        return userRepository.existsByEmail(email);
+    }
+
     public User findByEmail(String email){
 
         var user = userRepository.findByEmail(email);

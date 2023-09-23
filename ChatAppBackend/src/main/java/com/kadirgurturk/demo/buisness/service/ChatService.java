@@ -10,6 +10,8 @@ import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.data.enums.ChatType;
 import com.kadirgurturk.demo.data.repository.ChatRepository;
 import com.kadirgurturk.demo.data.repository.UserRepository;
+import com.kadirgurturk.demo.exception.UserExcepiton;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,20 @@ public class ChatService {
 
     private ChatRepository chatRepository;
     private UserService userService;
+
+
+    @PostConstruct
+    public void initializeChatroom() {
+        // Chatroom tipindeki bir sohbeti kontrol et
+        List<Chat> chatroomList = chatRepository.findByType(ChatType.CHATROOM);
+
+        if (chatroomList.isEmpty()) {
+            // Chatroom yoksa, bir tane oluşturun ve kaydedin
+            Chat chatroom = new Chat();
+            chatroom.setType(ChatType.CHATROOM);
+            chatRepository.save(chatroom);
+        }
+    }
 
     public Chat createChat(Long senderId, Long receiverId ){
         User sender = userService.findUserById(senderId);
@@ -52,9 +68,15 @@ public class ChatService {
 
         Chat chatRoom = chatRepository.findByType(ChatType.CHATROOM).get(0);
 
+        if(chatRoom == null) throw new UserExcepiton("Chatroom null");
+
         User user = userService.findByEmail(email);
 
+        if(user == null) throw new UserExcepiton("User null");
+
         chatRoom.getUsers().add(user);
+
+        chatRepository.save(chatRoom);
     }
 
     public void createChatRoom(Long senderId, Long receiverId ){
@@ -76,8 +98,6 @@ public class ChatService {
 
             return null;
         }
-
-
 
     }
 
