@@ -5,6 +5,7 @@ import com.kadirgurturk.demo.buisness.dto.AuthResponse;
 import com.kadirgurturk.demo.buisness.request.RegisterRequest;
 import com.kadirgurturk.demo.buisness.request.UserRequest;
 import com.kadirgurturk.demo.buisness.service.ChatService;
+import com.kadirgurturk.demo.buisness.service.EmailService;
 import com.kadirgurturk.demo.buisness.service.UserDetailsServer;
 import com.kadirgurturk.demo.buisness.service.UserService;
 import com.kadirgurturk.demo.data.entity.User;
@@ -42,6 +43,8 @@ public class AuthController {
     private ChatService chatService;
 
     private UserDetailsServer userDetailsServer;
+
+    private EmailService emailService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService, PasswordEncoder passwordEncoder, ChatService chatService, UserDetailsServer userDetailsServer) {
         this.authenticationManager = authenticationManager;
@@ -129,6 +132,8 @@ public class AuthController {
 
         authResponse.setMessege("User successfully registered.");
         authResponse.setAccessToken("Bearer " + jwtToken);
+
+        emailService.sendHtmlMail(registerRequest.getFirstName(),registerRequest.getEmail()); // We sending welcome email to new user
 
         var apıResponse = new ApıResponse<AuthResponse>();
 
