@@ -5,6 +5,7 @@ import com.kadirgurturk.demo.buisness.request.UpdateUserRequest;
 import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.data.repository.UserRepository;
 import com.kadirgurturk.demo.exception.UserExcepiton;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class UserService {
     private UserRepository userRepository;
 
 
+    @Transactional
     public void saveUser(User user){
          userRepository.save(user);
     }

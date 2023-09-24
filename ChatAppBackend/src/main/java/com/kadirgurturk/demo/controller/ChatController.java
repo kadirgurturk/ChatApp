@@ -23,14 +23,14 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/chat/")
+@RequestMapping("/api/v1/chat/")
 public class ChatController {
 
     private UserService userService;
 
     private ChatService chatService;
 
-    @PostMapping("/single")
+    @PostMapping("single")
     public ApıResponse<?> createChat(@RequestBody ChatRequest chatRequest)
     {
 
@@ -44,7 +44,20 @@ public class ChatController {
         return  apıResponse;
     }
 
-    @GetMapping("/single/user/")
+    @GetMapping("single/chat/")
+    public ApıResponse<?> getChatController(Long userId)
+    {
+
+        ApıResponse<String> apıResponse = new ApıResponse<>();
+
+
+        apıResponse.setResults("ChatController Open");
+        apıResponse.setStatus("Success");
+
+        return  apıResponse;
+    }
+
+    @GetMapping("single/user/")
     public ApıResponse<?> getAllChatList(@RequestParam("userid") Long userId)
     {
 

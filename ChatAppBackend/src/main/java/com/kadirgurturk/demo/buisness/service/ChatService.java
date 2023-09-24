@@ -12,6 +12,7 @@ import com.kadirgurturk.demo.data.repository.ChatRepository;
 import com.kadirgurturk.demo.data.repository.UserRepository;
 import com.kadirgurturk.demo.exception.UserExcepiton;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class ChatService {
         }
     }
 
+    @Transactional
     public Chat createChat(Long senderId, Long receiverId ){
         User sender = userService.findUserById(senderId);
         User reciever = userService.findUserById(receiverId);

@@ -116,7 +116,7 @@ public class AuthController {
 
         try {
             auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword())
+                    new UsernamePasswordAuthenticationToken(registerRequest.getEmail(),registerRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             //Here is the error

@@ -4,6 +4,7 @@ import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.data.repository.UserRepository;
 import com.kadirgurturk.demo.exception.UserExcepiton;
 import com.kadirgurturk.demo.security.JwtUserDetails;
+import jakarta.transaction.Transactional;
 import jdk.jshell.spi.ExecutionControl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,7 @@ public class UserDetailsServer implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         // We are using email instead userName,so we return email

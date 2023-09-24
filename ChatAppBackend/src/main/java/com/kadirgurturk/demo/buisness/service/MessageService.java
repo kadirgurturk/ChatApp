@@ -6,6 +6,7 @@ import com.kadirgurturk.demo.data.entity.Message;
 import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.data.enums.MessageStatus;
 import com.kadirgurturk.demo.data.repository.MessageRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class MessageService {
     private UserService userService;
     private ChatService chatService;
 
+    @Transactional
     public Message sendMessage(MessageRequest messageRequest)
     {
 
