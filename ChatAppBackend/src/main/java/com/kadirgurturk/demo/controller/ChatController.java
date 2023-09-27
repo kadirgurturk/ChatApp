@@ -9,6 +9,7 @@ import com.kadirgurturk.demo.buisness.service.MessageService;
 import com.kadirgurturk.demo.buisness.service.UserService;
 import com.kadirgurturk.demo.data.entity.Chat;
 import com.kadirgurturk.demo.data.enums.ChatType;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/chat/")
+@RequestMapping("api/v1/chat/")
 public class ChatController {
 
     private UserService userService;
@@ -31,7 +32,7 @@ public class ChatController {
     private ChatService chatService;
 
     @PostMapping("single")
-    public ApıResponse<?> createChat(@RequestBody ChatRequest chatRequest)
+    public ApıResponse<?> createChat(@RequestBody @Valid ChatRequest chatRequest)
     {
 
         ApıResponse<Chat> apıResponse = new ApıResponse<>();
@@ -71,7 +72,7 @@ public class ChatController {
         return  apıResponse;
     }
 
-    @GetMapping("/single")
+    @GetMapping("single/")
     public ApıResponse<?> getChatById(@RequestParam("chatid") Long chatId)
     {
 

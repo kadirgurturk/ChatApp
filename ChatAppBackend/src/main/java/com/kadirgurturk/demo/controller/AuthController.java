@@ -12,6 +12,7 @@ import com.kadirgurturk.demo.data.entity.User;
 import com.kadirgurturk.demo.exception.UserExcepiton;
 import com.kadirgurturk.demo.security.JwtTokenProvider;
 import com.kadirgurturk.demo.security.JwtUserDetails;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,7 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ApıResponse<?> login(@RequestBody UserRequest loginRequest){
+    public ApıResponse<?> login(@RequestBody @Valid UserRequest loginRequest){
         AuthResponse authResponse = new AuthResponse();
 
         Authentication auth;
@@ -79,9 +80,11 @@ public class AuthController {
         authResponse.setAccessToken("Bearer " + jwtToken);
         authResponse.setUserId(user.getId());
 
+        userService.setActive(user.getEmail(), true);
+
         var apıResponse = new ApıResponse<AuthResponse>();
 
-        apıResponse.setStatus("Succes");
+        apıResponse.setStatus("Success");
         apıResponse.setResults(authResponse);
 
         return apıResponse;
@@ -89,7 +92,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApıResponse<?> register(@RequestBody RegisterRequest registerRequest)
+    public ApıResponse<?> register(@RequestBody @Valid  RegisterRequest registerRequest)
     {
         AuthResponse authResponse = new AuthResponse();
 
@@ -101,12 +104,14 @@ public class AuthController {
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
                 .createdDate(LocalDateTime.now())
-                .email(registerRequest.getEmail()).build();
+                .email(registerRequest.getEmail())
+                .avatarId(registerRequest.getAvatarId())
+                .build();
 
         userNew.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         try {
-            userService.saveUser(userNew);
+           userService.saveUser(userNew);
         } catch (Exception e) {
            throw new UserExcepiton("We can't save the new User");
         }
@@ -133,11 +138,13 @@ public class AuthController {
         authResponse.setMessege("User successfully registered.");
         authResponse.setAccessToken("Bearer " + jwtToken);
 
+        userService.setActive(user.getUsername(), true);
+
         emailService.sendHtmlMail(registerRequest.getFirstName(),registerRequest.getEmail()); // We sending welcome email to new user
 
         var apıResponse = new ApıResponse<AuthResponse>();
 
-        apıResponse.setStatus("Succes");
+        apıResponse.setStatus("Success");
         apıResponse.setResults(authResponse);
 
         return apıResponse;

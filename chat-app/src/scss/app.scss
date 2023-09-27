@@ -1,0 +1,15 @@
+@use "./component/home/chatWindow";
+@use "./component/home/home";
+@use "./component/auth/login";
+@use "./component/auth/register";
+@use "./component/popup/updatePopup";
+@use "./component/header/header";
+@use "./mixin" as m;
+@use "./variable" as v;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: v.$primary-font;
+}

@@ -1,0 +1,202 @@
+@use "../../mixin" as m;
+@use "../../variable" as v;
+
+.chat-window{
+    width: 100vw;
+    min-height: 595px;
+    display: flex;
+    flex-direction: row;
+    background-color: v.$clr-light-mirage;
+
+    ul {
+        padding: 0;
+        list-style-type: none;
+      }
+
+    .member-list{
+        width: 23%;
+        background-color: v.$clr-mirage-light;
+        .search-li{
+            width: 100%;
+            height:56px;
+            background-color: v.$clr-mirage-light;
+            cursor: pointer;
+            position: relative;
+            .search-input{
+                width: 100%;
+                height: 100%;
+                background-color: v.$clr-mirage-light;
+                font-size: 1rem;
+                padding-left: 50px;
+                color: white;
+                outline: none;
+                border: none;
+                :focus{
+                    outline: none;
+                    border: none;
+                }
+                ::placeholder{
+                    color: white;
+                }
+            }
+            .search-icon{
+                position: absolute;
+                left: 8px;
+                top: 25%;
+                color:white
+            }
+            .message-icon{
+              position: absolute;
+              right: 10px;
+              top: 25%;
+              color:white
+          }
+        }
+
+        .member{
+            padding-left: 1.45rem;
+            width: 100%;
+            height:64px;
+            border: 1px solid v.$clr-mirage-light;
+            cursor: pointer;
+            background-color: v.$clr-mirage-light;
+            @include m.flex_row;
+            align-items: center;
+            .member-img{
+                position: relative;
+                img{
+                    width: 3rem;
+                }
+                .member-isActive{
+                    position: absolute;
+                    border-radius: 50%;
+                    width: 10px;
+                    height: 10px;
+                    background-color: #1c1c1c;
+                    top: 2px;
+                    right: 2px;
+                    @include m.row_center;
+                    .active{
+                        border-radius: 50%;
+                        width: 7px;
+                        height: 7px;
+                        background-color: greenyellow;
+                    }
+
+                }
+            }
+            .member-info{
+                margin-left: 1rem;
+                #name{
+                    color: white;
+                    font-size: 1.15rem;
+                }
+                #massege{
+                    color: white;
+                    font-size: 0.85rem;
+                }
+            }
+          }
+          .member.active{
+            background:v.$clr-light-mirage;
+            color:#ffffff;
+          }
+          .member:hover{
+            background: v.$clr-light-mirage;
+            color:#fff;
+          }
+
+      }
+
+
+      .chat-content{
+        width:77%;
+        background-color: v.$clr-blue;
+        @include m.flex_column;
+        justify-content: space-between;
+        align-items: center;
+
+        .chat-messages {
+            height: 88%;
+            width: 100%;
+            border: 1px solid #000;
+            overflow-y: auto; /* Yükseklik aşıldığında kaydırma çubuğunu göster */
+
+            .chat-messages::-webkit-scrollbar {
+                width: 8px; /* Kaydırma çubuğunun genişliği */
+              }
+              
+              .chat-messages::-webkit-scrollbar-track {
+                background: #f1f1f1; /* Kaydırma çubuğu arka plan rengi */
+              }
+              
+              .chat-messages::-webkit-scrollbar-thumb {
+                background: #888; /* Kaydırma çubuğu dolgu rengi */
+                border-radius: 4px; /* Kaydırma çubuğu köşe yuvarlatma */
+              }
+              
+              .chat-messages::-webkit-scrollbar-thumb:hover {
+                background: #555; /* Kaydırma çubuğu dolgu rengi (üzerine gelindiğinde) */
+              }
+
+              .message{
+                padding:5px;
+                width: auto;
+                display: flex;
+                flex-direction: row;
+                margin: 5px 10px;
+                .message-data{
+                    padding:5px;
+                  }
+                  .avatar{
+                    background-color: cornflowerblue;
+                    padding: 3px 5px;
+                    border-radius: 5px;
+                    color:#fff;
+                  }
+                  .avatar.self{
+                    color:#000;
+                    background-color: greenyellow;
+                  }
+
+              }
+              .message.self{
+                justify-content: end;
+              }
+          }
+
+
+          .send-message{
+            width: 100%;
+            height: 12%;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            
+
+            .input-message{
+                width:100%;
+                resize: none;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                padding-left: 1.5rem;
+                outline: none;
+                padding-right: 7rem;
+                
+                
+              }
+
+              .message-sender{
+                position: absolute;
+                right: 25px;
+                height: 1.5rem;
+                top: 25px;
+                width:10%;
+                cursor: pointer;
+              }
+          }
+          
+      }
+      
+
+  }

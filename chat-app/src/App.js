@@ -1,24 +1,21 @@
 import React, { useState } from "react";
 import ChatWindow from "./component/ChatWindow";
-import Login from "./component/Login";
+import Login from "./component/Auth/Login";
+import { Route,Routes } from "react-router-dom";
+import Home from "./component/Home";
+import Register from "./component/Auth/Register";
 
 
 
 function App() {
-  const [user,setUser] = useState({
-    username: '',
-    receiver: '',
-    connected: false,
-    message: ''
-  })
 
   return (
     <>
-      {user.connected ? 
-      <ChatWindow user={user} setUser={setUser}/>
-        :
-      <Login user={user} setUser={setUser} />
-      }
+      <Routes>
+          <Route path="/" element= {<Home/>}></Route>
+          <Route path="/login" element= {<Login/>}></Route>
+          <Route path="/register" element= {<Register/>}></Route>
+      </Routes>
     </>
   );
 }

@@ -51,12 +51,6 @@ public class UserService {
 
     }
 
-    public UserDto findUserWithToken(String jwt){
-
-        return null;
-
-    }
-
     public boolean isEmailValid(String email){
         return userRepository.existsByEmail(email);
     }
@@ -72,10 +66,36 @@ public class UserService {
         }
     }
 
-    public UserDto updateUser(Long id, UpdateUserRequest updateUserRequest){
+    public User setActive(String email, boolean active)
+    {
+        var user = userRepository.findByEmail(email);
 
+        if (user.isEmpty()){
+            throw new UserExcepiton("This User is not valid");
+        }
 
-        return null;
+        user.get().setActive(active);
+
+        userRepository.save(user.get());
+
+        return user.get();
+
+    }
+
+    public User updateUser(Long id, UpdateUserRequest updateUserRequest){
+        var user = userRepository.findById(id);
+
+        if (user.isEmpty()){
+            throw new UserExcepiton("This User is not valid");
+        }
+
+        user.get().setAvatarId(updateUserRequest.getAvatarId());
+        user.get().setFirstName(updateUserRequest.getFirstName());
+        user.get().setLastName(updateUserRequest.getLastName());
+
+        userRepository.save(user.get());
+
+        return user.get();
 
     }
 

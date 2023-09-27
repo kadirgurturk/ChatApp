@@ -36,6 +36,9 @@ public class User {
         @Column(name = "email")
         private String email;
 
+        @Column(name = "avatarId")
+        private Integer avatarId;
+
         @Column(name = "active")
         private boolean active;
 
